@@ -1,127 +1,406 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>💌 Para Ti</title>
-
 <style>
-body{
+  :root{
+    --pink:#ff4d88;
+    --pink2:#ff7fb0;
+    --bg1:#ffe6f0;
+    --bg2:#ffffff;
+    --ink:#2a2a2a;
+  }
+  *{box-sizing:border-box}
+  body{
     margin:0;
-    background: linear-gradient(to bottom, #ffe6f0, #ffffff);
-    font-family: 'Georgia', serif;
-    overflow:hidden;
-}
+    min-height:100vh;
+    background: linear-gradient(to bottom, var(--bg1), var(--bg2));
+    font-family: Georgia, "Times New Roman", serif;
+    overflow-x:hidden;
+    color:var(--ink);
+  }
 
-.card{
-    position:relative;
-    max-width:700px;
-    margin:80px auto;
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.1);
-    text-align:center;
-    z-index:2;
-}
-
-h1{
-    margin-bottom:10px;
-}
-
-.letter{
-    text-align:left;
-    white-space:pre-line;
-    line-height:1.6;
-    font-size:17px;
-}
-
-button{
-    padding:12px 20px;
-    border:none;
-    border-radius:30px;
-    background:#ff4d88;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-    font-size:15px;
-}
-
-button:hover{
-    background:#ff1a66;
-}
-
-.hide{
-    display:none;
-}
-
-/* Corazones */
-.heart{
-    position:absolute;
-    color:#ff4d88;
+  /* ===== hearts falling ===== */
+  .heart{
+    position:fixed;
+    top:-5vh;
+    left:0;
     font-size:14px;
-    animation:fall linear infinite;
-}
+    opacity:.95;
+    pointer-events:none;
+    animation: fall linear forwards;
+    z-index:0;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.08));
+  }
+  @keyframes fall{
+    0%{ transform: translateY(-10vh) translateX(0) rotate(0deg); opacity:1; }
+    100%{ transform: translateY(110vh) translateX(var(--drift)) rotate(360deg); opacity:0; }
+  }
 
-@keyframes fall{
-    0%{
-        transform:translateY(-10vh);
-        opacity:1;
-    }
-    100%{
-        transform:translateY(110vh);
-        opacity:0;
-    }
-}
+  /* ===== layout ===== */
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 26px 18px 110px;
+  }
+
+  /* ===== top card / envelope ===== */
+  .stage{
+    margin-top: 26px;
+    display:grid;
+    place-items:center;
+  }
+
+  .panel{
+    width:min(760px, 100%);
+    background: rgba(255,255,255,.85);
+    border: 1px solid rgba(255, 77, 136, .18);
+    border-radius: 22px;
+    box-shadow: 0 18px 55px rgba(0,0,0,.10);
+    backdrop-filter: blur(7px);
+    padding: 22px;
+  }
+
+  .title{
+    text-align:center;
+    margin: 4px 0 14px;
+    font-size: 22px;
+    letter-spacing:.2px;
+  }
+  .sub{
+    text-align:center;
+    margin: 0 0 18px;
+    opacity:.75;
+    font-size: 13px;
+  }
+
+  /* envelope */
+  .envelope{
+    width: min(520px, 100%);
+    margin: 0 auto 18px;
+    position:relative;
+    aspect-ratio: 16/10;
+  }
+  .env-base{
+    position:absolute; inset:0;
+    background: linear-gradient(145deg, #fff, #ffeef6);
+    border: 1px solid rgba(255, 77, 136, .22);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    overflow:hidden;
+  }
+  .env-triangle{
+    position:absolute; left:0; right:0; top:0; bottom:0;
+    background:
+      linear-gradient(135deg, transparent 50%, rgba(255,77,136,.10) 50%) left,
+      linear-gradient(225deg, transparent 50%, rgba(255,77,136,.10) 50%) right;
+    background-size: 50% 100%;
+    background-repeat:no-repeat;
+    opacity:.9;
+  }
+  .env-flap{
+    position:absolute;
+    left: 8%;
+    right: 8%;
+    top: -2%;
+    height: 55%;
+    background: linear-gradient(180deg, #fff, #ffe9f2);
+    border: 1px solid rgba(255, 77, 136, .20);
+    border-bottom: none;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 85%);
+    transform-origin: 50% 10%;
+    transform: rotateX(0deg);
+    transition: transform 700ms ease;
+  }
+  .seal{
+    position:absolute;
+    left:50%; top: 58%;
+    transform: translate(-50%,-50%);
+    width: 62px; height:62px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #fff, #ffe3ee);
+    border: 1px solid rgba(255,77,136,.30);
+    box-shadow: 0 10px 20px rgba(255,77,136,.20);
+    display:grid; place-items:center;
+    font-size: 22px;
+  }
+
+  /* “paper” that slides out */
+  .paper{
+    position:absolute;
+    left: 10%;
+    right: 10%;
+    bottom: 9%;
+    height: 82%;
+    background: linear-gradient(180deg, #ffffff, #fff6fb);
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 14px;
+    transform: translateY(45%);
+    transition: transform 850ms ease;
+    padding: 16px 16px 12px;
+    overflow:hidden;
+  }
+  .paper h2{
+    margin: 0 0 6px;
+    font-size: 16px;
+    text-align:center;
+    color: rgba(0,0,0,.75);
+  }
+  .paper p{
+    margin: 0;
+    font-size: 13px;
+    opacity:.72;
+    text-align:center;
+  }
+
+  /* open state */
+  .open .env-flap{ transform: rotateX(165deg); }
+  .open .paper{ transform: translateY(-5%); }
+
+  /* buttons */
+  .btnrow{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top: 6px;
+  }
+  .btn{
+    border:0;
+    padding: 12px 18px;
+    border-radius: 999px;
+    cursor:pointer;
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--pink);
+    color: #fff;
+    box-shadow: 0 10px 26px rgba(255,77,136,.25);
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:hover{ filter: brightness(1.03); }
+  .btn:active{ transform: translateY(1px) scale(.99); }
+  .btn.secondary{
+    background: rgba(255,77,136,.10);
+    color: var(--pink);
+    border: 1px solid rgba(255,77,136,.28);
+    box-shadow:none;
+  }
+
+  /* ===== letter section ===== */
+  .letterCard{
+    margin-top: 18px;
+    padding: 22px 22px 18px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.88);
+    border: 1px solid rgba(255, 77, 136, .16);
+    box-shadow: 0 16px 45px rgba(0,0,0,.08);
+    display:none;
+  }
+  .letterCard.show{ display:block; }
+  .letter{
+    white-space: pre-line;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+  .sig{
+    margin-top: 14px;
+    opacity:.65;
+    text-align:right;
+    font-size: 12px;
+  }
+
+  /* ===== bottom decorative bar ===== */
+  .bottomBar{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    padding: 12px 14px 18px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    z-index: 5;
+    pointer-events:none; /* enable only buttons */
+  }
+  .bottomBar .pill{
+    pointer-events:auto;
+    border-radius: 999px;
+    border: 1px solid rgba(255,77,136,.24);
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.10);
+    padding: 10px 12px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .mini{
+    border:0;
+    border-radius: 999px;
+    padding: 10px 14px;
+    cursor:pointer;
+    font-weight: 800;
+    font-size: 13px;
+    background: rgba(255,77,136,.12);
+    color: var(--pink);
+  }
+  .mini:active{ transform: translateY(1px); }
+
+  /* tiny sparkle */
+  .spark{
+    position:fixed;
+    width:10px; height:10px;
+    border-radius:999px;
+    pointer-events:none;
+    background: rgba(255,77,136,.22);
+    box-shadow: 0 0 18px rgba(255,77,136,.35);
+    animation: pop .8s ease forwards;
+    z-index: 4;
+  }
+  @keyframes pop{
+    0%{ transform: scale(.4); opacity:.0; }
+    25%{ opacity:1; }
+    100%{ transform: scale(2.2); opacity:0; }
+  }
+
+  /* responsive spacing */
+  @media (max-width:520px){
+    .letter{font-size:16px}
+    .panel{padding:18px}
+  }
 </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="stage">
+      <div class="panel" id="panel">
+        <div class="title">💌 Una carta para ti</div>
+        <div class="sub">Ábrela con calma… y con el corazón.</div>
 
-<div class="card">
-    <h1>💌 Una Carta Para Ti</h1>
-    <button id="openBtn">Abrir la carta</button>
-
-    <div id="content" class="hide">
-        <div class="letter">
-No sabía muy bien cómo poner en palabras todo lo que provocas en mí, pero quiero intentar explicarte lo que pasa en mi corazón cada vez que te pienso.
-
-Quiero empezar recordándote cuánto te amo y cuánto te quiero. A veces usamos esas palabras por separado, pero me he dado cuenta de que, cuando las junto para ti, se convierten en algo mucho más grande; en un sentimiento que no para de crecer. Es como un fuego que, lejos de apagarse, cada mañana encuentra una nueva razón para brillar más fuerte.
-
-Mi amor por ti no es estático; es algo vivo que aumenta con cada risa, con cada detalle y con cada día que pasamos juntos. Te amo de una forma que no conoce límites y te quiero con una intensidad que me llena el alma.
-
-Prometo no cansarme nunca de decírtelo. Quiero que mis palabras sean el eco que te acompañe siempre, hasta el último de mis días. Mi mayor esperanza es que ese "nunca" sea eterno, porque no imagino un futuro donde no seas tú la razón de mi alegría.
-
-Gracias por ser quien eres y por permitirme quererte así: sin frenos y con todo el corazón.
+        <div class="envelope" id="envelope">
+          <div class="env-base"></div>
+          <div class="env-triangle"></div>
+          <div class="paper">
+            <h2>Para ti</h2>
+            <p>Presiona “Abrir” cuando estés listo/a.</p>
+          </div>
+          <div class="env-flap"></div>
+          <div class="seal">❤️</div>
         </div>
+
+        <div class="btnrow">
+          <button class="btn" id="openBtn">Abrir</button>
+          <button class="btn secondary" id="peekBtn">Solo mirar</button>
+        </div>
+
+        <div class="letterCard" id="letterCard">
+          <div class="letter" id="letterText">
+No sabía muy bien cómo poner en palabras todo lo que provocas en mí, pero quiero intentar explicarte lo que pasa en mi corazón cada vez que te pienso.
+Quiero empezar recordándote cuánto te amo y cuánto te quiero. A veces usamos esas palabras por separado, pero me he dado cuenta de que, cuando las junto para ti, se convierten en algo mucho más grande; en un sentimiento que no para de crecer. Es como un fuego que, lejos de apagarse, cada mañana encuentra una nueva razón para brillar más fuerte.
+Mi amor por ti no es estático; es algo vivo que aumenta con cada risa, con cada detalle y con cada día que pasamos juntos. Te amo de una forma que no conoce límites y te quiero con una intensidad que me llena el alma.
+Prometo no cansarme nunca de decírtelo. Quiero que mis palabras sean el eco que te acompañe siempre, hasta el último de mis días. Mi mayor esperanza es que ese "nunca" sea eterno, porque no imagino un futuro donde no seas tú la razón de mi alegría.
+Gracias por ser quien eres y por permitirme quererte así: sin frenos y con todo el corazón.
+          </div>
+          <div class="sig">— De alguien que te aprecia ✨</div>
+        </div>
+
+      </div>
     </div>
-</div>
+  </div>
+
+  <!-- Decorative bottom buttons -->
+  <div class="bottomBar">
+    <div class="pill">
+      <button class="mini" id="loveBtn">Te Amo</button>
+      <button class="mini" id="wantBtn">Te Quiero</button>
+    </div>
+  </div>
 
 <script>
-const btn = document.getElementById("openBtn");
-const content = document.getElementById("content");
+  // ===== Hearts falling =====
+  function spawnHeart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = "❤️";
+    const x = Math.random() * 100; // vw
+    const dur = 3.2 + Math.random() * 5.2;
+    const drift = (Math.random() * 60 - 30).toFixed(1) + "px";
 
-btn.addEventListener("click", () => {
-    btn.style.display = "none";
-    content.classList.remove("hide");
-});
+    h.style.left = x + "vw";
+    h.style.animationDuration = dur + "s";
+    h.style.setProperty("--drift", drift);
 
-// Crear corazones
-function createHeart(){
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (3 + Math.random() * 5) + "s";
-    document.body.appendChild(heart);
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(), (dur+0.5)*1000);
+  }
+  setInterval(spawnHeart, 420);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 8000);
-}
+  // ===== Envelope open / peek =====
+  const env = document.getElementById("envelope");
+  const openBtn = document.getElementById("openBtn");
+  const peekBtn = document.getElementById("peekBtn");
+  const letterCard = document.getElementById("letterCard");
 
-setInterval(createHeart, 400);
+  function openLetter(showText){
+    env.classList.add("open");
+    if(showText){
+      letterCard.classList.add("show");
+      setTimeout(()=>letterCard.scrollIntoView({behavior:"smooth", block:"start"}), 350);
+    }
+  }
+
+  openBtn.addEventListener("click", ()=>{
+    openLetter(true);
+    // little sparkle burst
+    burstSparkles(12);
+  });
+
+  peekBtn.addEventListener("click", ()=>{
+    // open envelope but keep letter hidden (a “peek”)
+    openLetter(false);
+    burstSparkles(6);
+  });
+
+  // ===== Decorative bottom buttons: scroll up/down + cute feedback =====
+  const loveBtn = document.getElementById("loveBtn");
+  const wantBtn = document.getElementById("wantBtn");
+
+  loveBtn.addEventListener("click", ()=>{
+    // decorative: make it feel “alive”
+    burstSparkles(10);
+    // if letter is visible, go a bit UP to the envelope/top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  wantBtn.addEventListener("click", ()=>{
+    burstSparkles(10);
+    // decorative: if letter exists, go DOWN to it (or to bottom)
+    if(letterCard.classList.contains("show")){
+      letterCard.scrollIntoView({ behavior:"smooth", block:"start" });
+    } else {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+  });
+
+  // ===== Sparkles =====
+  function burstSparkles(n){
+    for(let i=0;i<n;i++){
+      setTimeout(()=>sparkAtRandom(), i*30);
+    }
+  }
+  function sparkAtRandom(){
+    const s = document.createElement("div");
+    s.className = "spark";
+    s.style.left = (10 + Math.random()*80) + "vw";
+    s.style.top  = (10 + Math.random()*70) + "vh";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 850);
+  }
 </script>
-
 </body>
 </html>
