@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 Para Ti</title>
+
+<style>
+body{
+    margin:0;
+    background: linear-gradient(to bottom, #ffe6f0, #ffffff);
+    font-family: 'Georgia', serif;
+    overflow:hidden;
+}
+
+.card{
+    position:relative;
+    max-width:700px;
+    margin:80px auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.1);
+    text-align:center;
+    z-index:2;
+}
+
+h1{
+    margin-bottom:10px;
+}
+
+.letter{
+    text-align:left;
+    white-space:pre-line;
+    line-height:1.6;
+    font-size:17px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:30px;
+    background:#ff4d88;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    background:#ff1a66;
+}
+
+.hide{
+    display:none;
+}
+
+/* Corazones */
+.heart{
+    position:absolute;
+    color:#ff4d88;
+    font-size:14px;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{
+        transform:translateY(-10vh);
+        opacity:1;
+    }
+    100%{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>💌 Una Carta Para Ti</h1>
+    <button id="openBtn">Abrir la carta</button>
+
+    <div id="content" class="hide">
+        <div class="letter">
+No sabía muy bien cómo poner en palabras todo lo que provocas en mí, pero quiero intentar explicarte lo que pasa en mi corazón cada vez que te pienso.
+
+Quiero empezar recordándote cuánto te amo y cuánto te quiero. A veces usamos esas palabras por separado, pero me he dado cuenta de que, cuando las junto para ti, se convierten en algo mucho más grande; en un sentimiento que no para de crecer. Es como un fuego que, lejos de apagarse, cada mañana encuentra una nueva razón para brillar más fuerte.
+
+Mi amor por ti no es estático; es algo vivo que aumenta con cada risa, con cada detalle y con cada día que pasamos juntos. Te amo de una forma que no conoce límites y te quiero con una intensidad que me llena el alma.
+
+Prometo no cansarme nunca de decírtelo. Quiero que mis palabras sean el eco que te acompañe siempre, hasta el último de mis días. Mi mayor esperanza es que ese "nunca" sea eterno, porque no imagino un futuro donde no seas tú la razón de mi alegría.
+
+Gracias por ser quien eres y por permitirme quererte así: sin frenos y con todo el corazón.
+        </div>
+    </div>
+</div>
+
+<script>
+const btn = document.getElementById("openBtn");
+const content = document.getElementById("content");
+
+btn.addEventListener("click", () => {
+    btn.style.display = "none";
+    content.classList.remove("hide");
+});
+
+// Crear corazones
+function createHeart(){
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (3 + Math.random() * 5) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 8000);
+}
+
+setInterval(createHeart, 400);
+</script>
+
+</body>
+</html>
